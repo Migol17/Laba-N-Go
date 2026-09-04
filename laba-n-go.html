@@ -75,6 +75,20 @@
   .photo-slot.on-dark{background:linear-gradient(150deg,rgba(255,255,255,0.10),rgba(255,255,255,0.04));border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.75);}
   .photo-slot.on-dark .ps-icon{color:var(--aqua);opacity:0.9;}
 
+  /* ---------- LOGO PLACEHOLDER ---------- */
+  .brand-mark{object-fit:cover;border-radius:10px;}
+  .logo-slot{
+    background:linear-gradient(150deg,#DCF3F7,#C7E9F2);
+    border:1.5px dashed rgba(10,60,99,0.35);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--sky-deep);
+  }
+  .logo-slot svg{width:55%;height:55%;}
+  .footer-brand .logo-slot{
+    background:linear-gradient(150deg,rgba(255,255,255,0.10),rgba(255,255,255,0.04));
+    border-color:rgba(255,255,255,0.35);color:var(--aqua);
+  }
+
   /* ---------- TICKER ---------- */
   .ticker{background:var(--sun);color:var(--navy);overflow:hidden;padding:9px 0;}
   .ticker-track{display:flex;width:max-content;animation:scroll 26s linear infinite;}
@@ -137,28 +151,45 @@
     aspect-ratio:1/1;
     display:flex;align-items:center;justify-content:center;
     overflow:hidden; /* crops any empty padding baked into the source image */
+    cursor:pointer;
   }
   .process-shirt-wrap img{
     width:100%;height:100%;object-fit:contain;display:block;
-    transform:scale(2.5); /* zooms past whitespace margins — raise/lower to taste */
+    transform:scale(2.6); /* zooms past whitespace margins — raise/lower to taste */
     filter:drop-shadow(0 24px 34px rgba(10,60,99,0.18));
   }
   .process-shirt-wrap .photo-slot{width:100%;height:100%;border-radius:24px;}
 
+  /* hover/tap reveal: before (dirty) fades to after (clean) */
+  .reveal-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .45s ease;}
+  .reveal-layer.layer-after{opacity:0;}
+  .reveal-layer.layer-before{opacity:1;z-index:1;}
+  .process-shirt-wrap.is-clean .layer-after{opacity:1;}
+  .process-shirt-wrap.is-clean .layer-before{opacity:0;}
+
+  .reveal-badge{
+    position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:3;
+    display:flex;align-items:center;gap:6px;
+    background:rgba(10,42,64,0.85);color:var(--white);
+    font-size:12px;font-weight:600;padding:7px 14px;border-radius:100px;
+    pointer-events:none;white-space:nowrap;
+  }
+  .reveal-badge svg{width:13px;height:13px;flex:none;}
+
   .process-badge{
     position:absolute;z-index:2;
-    display:flex;flex-direction:column;gap:2px;
+    display:flex;flex-direction:column;gap:4px;
     background:var(--navy);color:var(--white);
-    padding:13px 20px;border-radius:10px;
+    padding:18px 26px;border-radius:12px;
     box-shadow:0 16px 26px -10px rgba(10,60,99,0.4);
     white-space:nowrap;
     animation:badge-float 4.2s ease-in-out infinite;
   }
   .process-badge .badge-step{
-    font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--sun);
+    font-size:13px;font-weight:700;letter-spacing:0.06em;color:var(--sun);
   }
   .process-badge .badge-text{
-    font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;color:var(--white);
+    font-family:'Fredoka',sans-serif;font-size:19px;font-weight:600;color:var(--white);
   }
   .badge-1{top:6%;left:2%;animation-delay:0s;}
   .badge-2{top:32%;right:0%;animation-delay:0.9s;}
@@ -294,13 +325,9 @@
 <header class="site">
   <div class="nav">
     <a href="#top" class="brand">
-      <svg class="brand-mark" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="19" fill="#2E9FE0"/>
-        <path d="M12 15h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V17a2 2 0 0 1 2-2z" fill="#0A3C63"/>
-        <circle cx="20" cy="24" r="5.4" fill="#6FE3E8"/>
-        <circle cx="20" cy="24" r="2.6" fill="#0A3C63"/>
-        <path d="M14 15l2-3.5h8l2 3.5" stroke="#FFC63D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      </svg>
+      <!-- Point this at your real logo file. Until it exists, a placeholder box shows instead. -->
+      <img class="brand-mark" src="img/logo.png" alt="Laba-N-Go logo"
+           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'brand-mark logo-slot',innerHTML:'&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.6&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;3&quot;/&gt;&lt;circle cx=&quot;8.5&quot; cy=&quot;8.5&quot; r=&quot;1.5&quot;/&gt;&lt;path d=&quot;M21 15l-5-5L5 21&quot;/&gt;&lt;/svg&gt;'}))">
       <span>Laba-N-<em>Go</em></span>
     </a>
     <nav class="nav-links">
@@ -361,12 +388,22 @@
     </div>
 
     <div class="process-showcase">
-      <div class="process-shirt-wrap">
-        <!-- Point this at your own shirt graphic/photo (the img/3dShirt.png asset
-             referenced in the parked reveal-panel comment near the bottom of this file
-             works here too). If the file is missing, a placeholder box shows instead. -->
-        <img src="img/3dShirt.png" alt="Clean, folded shirt"
-             onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'photo-slot',innerHTML:'&lt;svg class=&quot;ps-icon&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.6&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;path d=&quot;M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ps-label&quot;&gt;Add photo: shirt / laundry graphic&lt;/span&gt;'}))">
+      <div class="process-shirt-wrap" id="revealFrame" role="button" tabindex="0"
+           aria-label="Hover or tap to see the shirt go from dirty to clean">
+        <!-- "After" (clean) layer — sits on top once hovered/tapped -->
+        <div class="reveal-layer layer-after">
+          <img src="img/3dShirt.png" alt="Clean shirt after wash and fold"
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'photo-slot',innerHTML:'&lt;svg class=&quot;ps-icon&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.6&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;path d=&quot;M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ps-label&quot;&gt;Add photo: clean shirt (after)&lt;/span&gt;'}))">
+        </div>
+        <!-- "Before" (dirty) layer — shown by default -->
+        <div class="reveal-layer layer-before">
+          <img src="img/3dShirtdirty.png" alt="Dirty shirt before wash and fold"
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'photo-slot',innerHTML:'&lt;svg class=&quot;ps-icon&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.6&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;path d=&quot;M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z&quot;/&gt;&lt;/svg&gt;&lt;span class=&quot;ps-label&quot;&gt;Add photo: dirty shirt (before)&lt;/span&gt;'}))">
+        </div>
+        <div class="reveal-badge" id="revealBadge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          <span id="revealBadgeText">Hover to see it clean</span>
+        </div>
       </div>
 
       <div class="process-badge badge-1">
@@ -508,7 +545,7 @@
     <div class="location-frame">
       <!-- Swap the src below for your exact shop pin: get it from Google Maps > Share > Embed a map -->
       <iframe
-        src="https://www.google.com/maps?q=Zapote,+Bacoor,+Cavite&output=embed"
+        src="https://www.google.com/maps?q=14.463640,120.965449&output=embed"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
         aria-label="Map showing Laba-N-Go location in Zapote, Bacoor">
@@ -585,13 +622,8 @@
     <div class="footer-top">
       <div class="footer-brand-text">
         <div class="footer-brand">
-          <svg class="brand-mark" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="19" fill="#2E9FE0"/>
-            <path d="M12 15h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V17a2 2 0 0 1 2-2z" fill="#0A3C63"/>
-            <circle cx="20" cy="24" r="5.4" fill="#6FE3E8"/>
-            <circle cx="20" cy="24" r="2.6" fill="#082A45"/>
-            <path d="M14 15l2-3.5h8l2 3.5" stroke="#FFC63D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          </svg>
+          <img class="brand-mark" src="img/logo.png" alt="Laba-N-Go logo"
+               onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'brand-mark logo-slot',innerHTML:'&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.6&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;3&quot;/&gt;&lt;circle cx=&quot;8.5&quot; cy=&quot;8.5&quot; r=&quot;1.5&quot;/&gt;&lt;path d=&quot;M21 15l-5-5L5 21&quot;/&gt;&lt;/svg&gt;'}))">
           <span>Laba-N-Go</span>
         </div>
         <p>Wash, dry, and fold with pickup and delivery around Zapote, Bacoor.</p>
@@ -693,6 +725,24 @@
   });
 
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Shirt before/after reveal (process section)
+  const revealFrame = document.getElementById('revealFrame');
+  const revealBadgeText = document.getElementById('revealBadgeText');
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  if (isTouch) {
+    revealBadgeText.textContent = 'Tap to see it clean';
+    revealFrame.addEventListener('click', () => revealFrame.classList.toggle('is-clean'));
+  } else {
+    revealFrame.addEventListener('mouseenter', () => revealFrame.classList.add('is-clean'));
+    revealFrame.addEventListener('mouseleave', () => revealFrame.classList.remove('is-clean'));
+  }
+  revealFrame.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      revealFrame.classList.toggle('is-clean');
+    }
+  });
 </script>
 
 </body>
